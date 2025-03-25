@@ -1,6 +1,9 @@
+
+
 services:
   app:
     build: .
     ports:
-      - "8080:8080"
-    command: python3 app.py
+      - "5000:5000"  # Expose Flask on port 5000
+    command: python3 app.py  # Command to run the Flask app
+

@@ -1,35 +1,12 @@
-from http.server import BaseHTTPRequestHandler, HTTPServer
-import subprocess, sys
+import subprocess
 
-class MyHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.send_header('Content-type', 'text/plain')
-        self.end_headers()
-        # run df -h and put in output
-        dfout = subprocess.check_output(["df", "-h"])
-        self.wfile.write(dfout)
-        self.wfile.write("**********\n".encode())
-        self.wfile.write(b'''
-          ##         .
-    ## ## ##        ==
- ## ## ## ## ##    ===
-/"""""""""""""""""\___/ ===
-{                       /  ===-
-\______ O           __/
- \    \         __/
-  \____\_______/
+# Run system commands
+memory = subprocess.check_output("free -h", shell=True).decode()
+processes = subprocess.check_output("ps aux", shell=True).decode()
+block_devices = subprocess.check_output("lsblk", shell=True).decode()
 
+# Combine everything into one output string
+output = f"Free Memory:\n{memory}\n\nRunning Processes:\n{processes}\n\nBlock Devices:\n{block_devices}"
 
-Hello from Docker!
-''')
-
-def run():
-    print('Starting server...')
-    server_address = ('', 8080)
-    httpd = HTTPServer(server_address, MyHandler)
-    print('Server started!')
-    httpd.serve_forever()
-
-if __name__ == '__main__':
-    run()
+# Print the output (this will be shown when the container runs)
+print(output)
